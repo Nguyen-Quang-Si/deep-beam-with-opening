@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tính sức kháng cắt dầm cao có lỗ mở</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0052cc;
+      --primary-dark: #003b99;
+      --accent: #ff8a00;
+      --bg: #f3f5fb;
+      --card-bg: #ffffff;
+      --border: #dde3f0;
+      --text-main: #1f2933;
+      --text-sub: #6b7280;
+      --radius-lg: 14px;
+      --radius-md: 8px;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #dbeafe 0, #f3f5fb 40%, #edf2ff 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+    .page {
+      width: 100%;
+      max-width: 1100px;
+      margin: 32px auto;
+      padding: 0 16px 32px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
+    }
+    .brand-text-title {
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .brand-text-sub {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+    .badge {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0, 82, 204, 0.07);
+      color: var(--primary-dark);
+      border: 1px solid rgba(0, 82, 204, 0.25);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.10);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      padding: 18px 20px 20px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 14px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .card-sub {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px 16px;
+    }
+    @media (min-width: 900px) {
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .field label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #374151;
+    }
+    .field small {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+    .field input[type="number"] {
+      margin-top: 2px;
+      padding: 7px 8px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+      background-color: #f9fafb;
+    }
+    .field input[type="number"]:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.35);
+      background-color: #ffffff;
+    }
+
+    .actions {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      padding: 8px 20px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.32);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.1s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(30, 64, 175, 0.35);
+      filter: brightness(1.03);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 18px rgba(30, 64, 175, 0.25);
+    }
+    .btn-primary span.icon {
+      font-size: 16px;
+    }
+    .hint {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .result-main {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      gap: 12px;
+    }
+    .vu-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background-color: rgba(34, 197, 94, 0.08);
+      color: #047857;
+      font-size: 11px;
+      border: 1px solid rgba(22, 163, 74, 0.25);
+    }
+    .meta {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+
+    details {
+      margin-top: 8px;
+      border-radius: var(--radius-md);
+      border: 1px dashed var(--border);
+      padding: 6px 9px 4px;
+      background-color: #f9fafb;
+      font-size: 12px;
+    }
+    details summary {
+      cursor: pointer;
+      font-weight: 500;
+      list-style: none;
+    }
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+    details summary::before {
+      content: "▸";
+      display: inline-block;
+      margin-right: 4px;
+      font-size: 10px;
+      transform: translateY(-1px);
+    }
+    details[open] summary::before {
+      content: "▾";
+    }
+    .xi-list p {
+      margin: 2px 0;
+    }
+
+    .footer {
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--text-sub);
+      text-align: right;
+    }
+
+    @media (max-width: 860px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-logo">V</div>
+        <div>
+          <div class="brand-text-title">Beam Open Web</div>
+          <div class="brand-text-sub">Ứng dụng tính sức kháng cắt dầm cao có lỗ mở</div>
+        </div>
+      </div>
+      <div class="badge">Beta • For engineering use</div>
+    </header>
+
+    <!-- MAIN LAYOUT -->
+    <div class="layout">
+      <!-- LEFT: INPUT CARD -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">1. Thông số hình học &amp; vật liệu</div>
+            <div class="card-sub">Nhập số liệu theo đúng đơn vị. Ứng dụng sẽ tự tính các biến vô thứ nguyên X₁–X₉.</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label for="H">H – chiều cao dầm (mm)</label>
+            <input type="number" id="H" value="600" min="1" step="10">
+          </div>
+          <div class="field">
+            <label for="a">a – khoảng cách lực đến gối (mm)</label>
+            <input type="number" id="a" value="900" min="1" step="10">
+          </div>
+          <div class="field">
+            <label for="ax">aₓ – chiều dài lỗ (mm)</label>
+            <input type="number" id="ax" value="200" min="0" step="5">
+          </div>
+
+          <div class="field">
+            <label for="ay">aᵧ – chiều cao lỗ (mm)</label>
+            <input type="number" id="ay" value="200" min="0" step="5">
+          </div>
+          <div class="field">
+            <label for="X0">X₀ – tâm lỗ đến gối (mm)</label>
+            <input type="number" id="X0" value="300" min="0" step="5">
+          </div>
+          <div class="field">
+            <label for="Y0">Y₀ – tâm lỗ đến mép dầm (mm)</label>
+            <input type="number" id="Y0" value="300" min="0" step="5">
+          </div>
+
+          <div class="field">
+            <label for="fc">f'c – cường độ nén bê tông (MPa)</label>
+            <input type="number" id="fc" value="30" min="1" step="1">
+          </div>
+          <div class="field">
+            <label for="fy">fᵧ – cường độ chảy thép (MPa)</label>
+            <input type="number" id="fy" value="420" min="1" step="5">
+          </div>
+          <div class="field">
+            <label for="rhosw">ρ<sub>sw</sub> – hàm lượng cốt đai (%)</label>
+            <input type="number" id="rhosw" value="0.5" min="0" step="0.05">
+          </div>
+
+          <div class="field">
+            <label for="rhoo">ρ<sub>o</sub> – hàm lượng cốt dọc (%)</label>
+            <input type="number" id="rhoo" value="1.0" min="0" step="0.05">
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" onclick="calcVu()">
+            <span class="icon">⚙️</span>
+            <span>Tính V<sub>u</sub> (kN)</span>
+          </button>
+          <div class="hint">Lưu ý: kiểm tra lại số liệu đầu vào (đặc biệt là vị trí &amp; kích thước lỗ mở) trước khi sử dụng kết quả.</div>
+        </div>
+      </section>
+
+      <!-- RIGHT: RESULT CARD -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">2. Kết quả sức kháng cắt</div>
+            <div class="card-sub">Giá trị dự đoán theo công thức thực nghiệm với các biến vô thứ nguyên.</div>
+          </div>
+        </div>
+
+        <div class="result-main">
+          <div>
+            <div id="vuBox" class="vu-value">V<sub>u</sub> — chưa tính</div>
+            <div class="meta" id="metaText">Nhập số liệu bên trái và bấm “Tính V<sub>u</sub> (kN)” để xem kết quả.</div>
+            <span id="qualityTag" class="pill" style="display:none;">Trạng thái tính toán: OK</span>
+          </div>
+
+          <details id="xiPanel" style="display:none;">
+            <summary>Chi tiết các biến vô thứ nguyên X₁–X₉</summary>
+            <div id="xiValues" class="xi-list"></div>
+          </details>
+
+          <div class="footer">
+            © 2025 • Tool tính nhanh cho nghiên cứu &amp; thiết kế dầm cao có lỗ mở.
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    function calcVu() {
+      const get = id => parseFloat(document.getElementById(id).value);
+
+      const H     = get("H");
+      const a     = get("a");
+      const ax    = get("ax");
+      const ay    = get("ay");
+      const X0    = get("X0");
+      const Y0    = get("Y0");
+      const fc    = get("fc");
+      const fy    = get("fy");
+      const rhosw = get("rhosw");
+      const rhoo  = get("rhoo");
+
+      // basic validation
+      if ([H, a, ax, ay, X0, Y0, fc, fy, rhosw, rhoo].some(v => isNaN(v))) {
+        alert("Vui lòng nhập đầy đủ số liệu.");
+        return;
+      }
+      if (H <= 0 || a <= 0) {
+        alert("H và a phải > 0.");
+        return;
+      }
+
+      // Xi
+      const X1 = fc;
+      const X2 = a / H;
+      const X3 = ax / a;
+      const X4 = ay / H;
+      const X5 = X0 / a;
+      const X6 = Y0 / H;
+      const X7 = fy;
+      const X8 = rhosw;
+      const X9 = rhoo;
+
+      // Công thức thực nghiệm
+      const term1 = 0.0173 * X1 - 0.3434;
+
+      let term2 = -0.011 * X1
+                - 0.045 * X2
+                + Math.pow(1 - 0.375 * X8, 2)
+                + 0.412;
+      term2 = Math.pow(term2, 2);
+
+      const inner1 = 0.015 * X1
+                   + (0.162 - 0.374 * X5) * (0.533 * X9 - 0.778)
+                   - 1.33;
+
+      const inner2 = 5 * X4 - 0.582 * X9 - 2.283;
+
+      const term3 = 1.8 * X4
+                  + 0.9634 * X5
+                  + (2.195 - 1.475 * X2) * inner1 * inner2
+                  - 0.8;
+
+      const Y = 15455.1 * term1 * term2 * term3 + 167.263; // kN
+
+      // Hiển thị kết quả
+      const vuBox = document.getElementById("vuBox");
+      const metaText = document.getElementById("metaText");
+      const qualityTag = document.getElementById("qualityTag");
+      const xiPanel = document.getElementById("xiPanel");
+
+      vuBox.innerHTML = `V<sub>u</sub> ≈ ${Y.toFixed(2)} kN`;
+      metaText.textContent = "Kết quả tính toán dựa trên tham số hiện tại. Vui lòng so sánh với thí nghiệm hoặc tiêu chuẩn thiết kế trước khi áp dụng.";
+
+      qualityTag.style.display = "inline-flex";
+
+      // In Xi
+      xiPanel.style.display = "block";
+      const xiHtml = `
+        <p>X₁ = f'c = ${X1.toFixed(4)}</p>
+        <p>X₂ = a / H = ${X2.toFixed(4)}</p>
+        <p>X₃ = aₓ / a = ${X3.toFixed(4)}</p>
+        <p>X₄ = aᵧ / H = ${X4.toFixed(4)}</p>
+        <p>X₅ = X₀ / a = ${X5.toFixed(4)}</p>
+        <p>X₆ = Y₀ / H = ${X6.toFixed(4)}</p>
+        <p>X₇ = fᵧ = ${X7.toFixed(4)}</p>
+        <p>X₈ = ρsw = ${X8.toFixed(4)}</p>
+        <p>X₉ = ρo = ${X9.toFixed(4)}</p>
+      `;
+      document.getElementById("xiValues").innerHTML = xiHtml;
+    }
+  </script>
+</body>
+</html>
