@@ -1,1 +1,1 @@
-# deep-beam-with-opening
+# deep-beam-with-openings
